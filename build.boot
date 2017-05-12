@@ -1,6 +1,6 @@
 (set-env!
-  :resource-paths #{"src" "data"}
-  :source-paths #{"test"}
+  :resource-paths #{"src"}
+  :source-paths #{"test" "data"}
   :dependencies '[[org.clojure/clojure "1.9.0-alpha15"]
                   [org.clojure/tools.logging "0.3.1"]
                   [nightlight "1.6.4" :scope "test"]
