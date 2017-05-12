@@ -14,7 +14,9 @@
 
 (deftest word-2-vec-test
   (is (= 100 (count (nlp/words-nearest w2v "chiba" 100))))
-  (is (= true (nlp/has-word? w2v "chiba"))))
+  (is (= true (nlp/has-word? w2v "chiba")))
+  (is (= true (not (nil? (nlp/get-word-vector w2v "chiba")))))
+  (is (= java.lang.Double (class (nlp/similarity w2v "chiba" "city")))))
 
 (nlp/write-word-vectors w2v "data/neuromancer.csv")
 
