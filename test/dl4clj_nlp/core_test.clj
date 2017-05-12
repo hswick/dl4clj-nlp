@@ -13,14 +13,14 @@
 (nlp/fit! w2v)
 
 (deftest word-2-vec-test
-  (is (= 100 (count (nlp/words-nearest w2v "chiba" 100)))))
+  (is (= 100 (count (nlp/words-nearest w2v "chiba" 100))))
+  (is (= true (nlp/has-word? w2v "chiba"))))
 
 (nlp/write-word-vectors w2v "data/neuromancer.csv")
 
-(def w2v2 (nlp/load-w2v-from-txt (clojure.java.io/file "neuromancer.csv")))
+(def w2v2 (nlp/read-word-vectors (clojure.java.io/file "data/neuromancer.csv")))
 
 (deftest serialization-test
   (is (= true (.exists (clojure.java.io/file "data/neuromancer.csv"))))
   (is (= org.deeplearning4j.models.word2vec.Word2Vec (class w2v2)))
   (is (= 100 (count (nlp/words-nearest w2v "chiba" 100)))))
-  
