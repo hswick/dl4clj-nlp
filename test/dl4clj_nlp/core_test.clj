@@ -1,5 +1,7 @@
 (ns dl4clj-nlp.core-test
   (:require [dl4clj-nlp.core :as nlp]
+            [dl4clj-nlp.sentence-iterator :as iter]
+            [dl4clj-nlp.tokenization :as token]
             [clojure.test :refer :all]
             [clojure.tools.logging :as log]))
 
@@ -30,4 +32,18 @@
 (deftest stop-words
   (is (= true (seq? (nlp/stop-words)))))
 
+(def w2v3 (nlp/word-2-vec 
+            (iter/default-iterator (nlp/absolute-path "data/neuromancer.txt"))
+            (token/default-tokenizer-factory (token/common-stemmer-preprocessor))
+            {:min-word-frequency 6
+             :stopwords (nlp/stop-words)
+             :window-size 10
+             :layer-size 150}))
+              
+(nlp/fit! w2v3)
 
+(deftest word-2-vec3-test
+  (is (= 100 (count (nlp/words-nearest w2v3 "chiba" 100))))
+  (is (= true (nlp/has-word? w2v3 "chiba")))
+  (is (= true (not (nil? (nlp/get-word-vector w2v3 "chiba")))))
+  (is (= java.lang.Double (class (nlp/similarity w2v3 "chiba" "city")))))
