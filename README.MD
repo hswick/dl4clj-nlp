@@ -1,6 +1,6 @@
 # dl4clj-nlp
 
-Clojure library meant to for word embedding using the deeplearning4j.
+Clojure library meant for word embedding using the deeplearning4j.
 
 Currently still in experimental stage and api subject to change.
 
@@ -10,7 +10,8 @@ Pull requests are welcome!
 
 To use dl4clj-nlp:
 ```clojure
-(:require '[dl4clj-nlp.core :as nlp])
+(:require '[dl4clj-nlp.core :as nlp]
+		  '[dl4clj-nlp.util :as util])
 
 ;;Configure your Word2Vec model
 (def w2v (nlp/word-2-vec "path/to/text-file" 
@@ -28,6 +29,24 @@ To use dl4clj-nlp:
 
 ;;Load a word2vec model from memory
 (def w2v-2 (nlp/read-word-vectors "word_vectors.csv"))
+
+;;If you want stopping and stemming initialize word2vec like this
+(nlp/word-2-vec 
+ (iter/default-iterator (util/absolute-path "neuromancer.txt"))
+ (token/default-tokenizer-factory (token/common-stemmer-preprocessor))
+ {:min-word-frequency 6
+  :stopwords (nlp/stop-words)
+  :window-size 10
+  :layer-size 150})
+  
+;;If you want to input a directory initialize like this
+(def w2v4 (nlp/word-2-vec
+            (iter/dir-iterator "path/to/dir")
+            (token/default-tokenizer-factory)
+            {:min-word-frequency 6
+             :window-size 10
+             :layer-size 150
+             :stopwords (nlp/stop-words)}))
 ```
 
 # Dev

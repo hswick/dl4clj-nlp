@@ -2,23 +2,28 @@
   (:require [dl4clj-nlp.core :as nlp]
             [dl4clj-nlp.sentence-iterator :as iter]
             [dl4clj-nlp.tokenization :as token]
+            [dl4clj-nlp.util :as util]
             [clojure.test :refer :all]
             [clojure.tools.logging :as log]))
 
-(def filepath (nlp/absolute-path "neuromancer.txt"))
+(def filepath (util/absolute-path "neuromancer.txt"))
 
-(deftest file-io
+(testing 'file-io
   (is (= true (.exists (clojure.java.io/file filepath)))))
 
 (def w2v (nlp/word-2-vec "neuromancer.txt"))
 
 (nlp/fit! w2v)
 
-(deftest word-2-vec-test
-  (is (= 100 (count (nlp/words-nearest w2v "chiba" 100))))
-  (is (= true (nlp/has-word? w2v "chiba")))
-  (is (= true (not (nil? (nlp/get-word-vector w2v "chiba")))))
-  (is (= java.lang.Double (class (nlp/similarity w2v "chiba" "city")))))
+(defn w2v-test [w2v]
+  (is (= org.deeplearning4j.models.word2vec.Word2Vec (class w2v)))
+  (is (= 100 (count (nlp/words-nearest w2v "sky" 100))))
+  (is (= true (nlp/has-word? w2v "sky")))
+  (is (= true (not (nil? (nlp/get-word-vector w2v "sky")))))
+  (is (= java.lang.Double (class (nlp/similarity w2v "sky" "city")))))
+
+(deftest w2v-test0
+  (w2v-test w2v))
 
 (nlp/write-word-vectors w2v "data/neuromancer.csv")
 
@@ -26,8 +31,7 @@
 
 (deftest serialization-test
   (is (= true (.exists (clojure.java.io/file "data/neuromancer.csv"))))
-  (is (= org.deeplearning4j.models.word2vec.Word2Vec (class w2v2)))
-  (is (= 100 (count (nlp/words-nearest w2v "chiba" 100)))))
+  (w2v-test w2v2))
 
 (def stopwords (nlp/stop-words))
 
@@ -36,7 +40,7 @@
   (is (= true (not (nil? stopwords)))))
 
 (def w2v3 (nlp/word-2-vec 
-            (iter/default-iterator (nlp/absolute-path "neuromancer.txt"))
+            (iter/default-iterator (util/absolute-path "neuromancer.txt"))
             (token/default-tokenizer-factory (token/common-stemmer-preprocessor))
             {:min-word-frequency 6
              :stopwords (nlp/stop-words)
@@ -45,8 +49,40 @@
               
 (nlp/fit! w2v3)
 
-(deftest word-2-vec3-test
-  (is (= 100 (count (nlp/words-nearest w2v3 "chiba" 100))))
-  (is (= true (nlp/has-word? w2v3 "chiba")))
-  (is (= true (not (nil? (nlp/get-word-vector w2v3 "chiba")))))
-  (is (= java.lang.Double (class (nlp/similarity w2v3 "chiba" "city")))))
+(deftest w2v3-test
+  (w2v-test w2v3))
+
+(def w2v4 (nlp/word-2-vec
+            (iter/file-sentence-iterator (clojure.java.io/file (util/absolute-path "test_dir")))
+            (token/default-tokenizer-factory)
+            {:min-word-frequency 6
+             :window-size 10
+             :layer-size 150
+             :stopwords (nlp/stop-words)}))
+
+(nlp/fit! w2v4)
+
+(deftest w2v4-test
+  (w2v-test w2v4))
+
+(def w2v5 (nlp/word-2-vec!
+            (iter/file-sentence-iterator (clojure.java.io/file (util/absolute-path "test_dir")))
+            (token/default-tokenizer-factory)
+            {:min-word-frequency 6
+             :window-size 10
+             :layer-size 150
+             :stopwords (nlp/stop-words)}))
+
+(deftest w2v5-test
+  (w2v-test w2v5))
+
+(def w2v6 (nlp/word-2-vec!
+            (iter/dir-iterator "test_dir")
+            (token/default-tokenizer-factory)
+            {:min-word-frequency 6
+             :window-size 10
+             :layer-size 150
+             :stopwords (nlp/stop-words)}))
+
+(deftest w2v6-test
+  (w2v-test w2v6))
