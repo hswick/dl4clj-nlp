@@ -26,3 +26,8 @@
   (is (= true (.exists (clojure.java.io/file "data/neuromancer.csv"))))
   (is (= org.deeplearning4j.models.word2vec.Word2Vec (class w2v2)))
   (is (= 100 (count (nlp/words-nearest w2v "chiba" 100)))))
+
+(deftest stop-words
+  (is (= true (seq? (nlp/stop-words)))))
+
+

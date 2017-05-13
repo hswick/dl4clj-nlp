@@ -14,6 +14,7 @@
                   [org.nd4j/nd4j-native "0.8.0"]
                   [org.deeplearning4j/deeplearning4j-nlp "0.8.0"]
                   [org.deeplearning4j/deeplearning4j-core "0.8.0"]
+                  [org.apache.lucene/lucene-snowball "3.0.3"]
                   [org.slf4j/slf4j-log4j12 "1.7.1"]
                   [log4j/log4j "1.2.17" :exclusions [javax.mail/mail
                                                      javax.jms/jms
