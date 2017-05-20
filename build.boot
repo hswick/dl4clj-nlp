@@ -40,8 +40,7 @@
 (deftask night []
   (comp
     (wait)
-    (nightlight :port 4000)
-    (welcome "Nightlight")))
+    (nightlight :port 4000)))
 
 (deftask build
   "Build and install the project locally"
