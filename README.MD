@@ -11,11 +11,11 @@ Pull requests are welcome!
 To use dl4clj-nlp:
 ```clojure
 (:require '[dl4clj-nlp.core :as nlp]
-		  '[dl4clj-nlp.util :as util])
+		'[dl4clj-nlp.util :as util])
 
 ;;Configure your Word2Vec model
 (def w2v (nlp/word-2-vec "path/to/text-file" 
-	{:min-word-frequency 5;;You can also input an option map
+{:min-word-frequency 5;;You can also input an option map
      :iterations 1		  ;;To set certain parameters
      :layer-size 100
      :seed 42

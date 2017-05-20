@@ -9,6 +9,7 @@
                   [nightlight "1.6.4" :scope "test"]
                   [adzerk/boot-test "1.2.0" :scope "test"]
                   [adzerk/bootlaces "0.1.13" :scope "test"]
+                  [degree9/boot-welcome "1.0.0"]
                   [org.datavec/datavec-api "0.8.0"]
                   [org.nd4j/nd4j-native-platform "0.8.0"]
                   [org.nd4j/nd4j-native "0.8.0"]
@@ -25,7 +26,8 @@
   '[nightlight.boot :refer [nightlight]]
   'dl4clj-nlp.core
   '[adzerk.boot-test :refer :all]
-  '[adzerk.bootlaces :refer :all])
+  '[adzerk.bootlaces :refer :all]
+  '[degree9.boot-welcome :refer [welcome]])
 
 (bootlaces! version)
 
@@ -40,7 +42,8 @@
 (deftask night []
   (comp
     (wait)
-    (nightlight :port 4000)))
+    (nightlight :port 4000)
+    (welcome "Nightlight")))
 
 (deftask build
   "Build and install the project locally"
