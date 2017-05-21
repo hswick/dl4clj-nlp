@@ -30,7 +30,7 @@
 (bootlaces! version)
 
 (task-options! pom {:project project      
-                    :version version      
+                    :version version     
                     :description "Clojure library for word embedding using deeplearning4j"      
                     :url         "https://github.com/hswick/dl4clj-nlp"      
                     :scm         {:url "https://github.com/hswick/dl4clj-nlp"}      
